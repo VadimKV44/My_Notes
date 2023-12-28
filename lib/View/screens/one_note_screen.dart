@@ -11,12 +11,10 @@ class OneNoteScreen extends StatefulWidget {
     Key? key,
     this.note,
     this.saveNote,
-    required this.noteIndex,
   }) : super(key: key);
 
   final NoteModel? note;
-  final int noteIndex;
-  final void Function(String text, DateTime createDate, int noteId)? saveNote;
+  final void Function(String text, DateTime createDate)? saveNote;
 
   @override
   State<OneNoteScreen> createState() => _OneNoteScreenState();
@@ -119,10 +117,10 @@ class _OneNoteScreenState extends State<OneNoteScreen> {
   void _save(BuildContext context, NotesCubit notesCubit) {
     if (_controller.text.isNotEmpty) {
       if (widget.note == null) {
-        widget.saveNote!(_controller.text, date!, widget.noteIndex);
+        widget.saveNote!(_controller.text, date!);
       } else {
         if (widget.note?.text != _controller.text) {
-          notesCubit.overwriteNote(widget.noteIndex, _controller.text, date!);
+          notesCubit.saveNote(_controller.text, date!, widget.note?.key ?? null);
         }
       }
     }

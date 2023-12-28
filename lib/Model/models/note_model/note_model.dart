@@ -1,22 +1,23 @@
 
 import 'package:hive/hive.dart';
+import 'package:my_notes/View/consts/hive_type_ids.dart';
 
 part 'note_model.g.dart';
 
-@HiveType(typeId: 0)
-class NoteModel {
+@HiveType(typeId: NoteModelHiveIds.hiveTypeId)
+class NoteModel extends HiveObject {
   NoteModel({
-    required this.id,
     required this.text,
     required this.createDate,
+    required this.key,
 });
 
-  @HiveField(0)
-  final int? id;
-
-  @HiveField(1)
+  @HiveField(NoteModelHiveIds.hiveFieldText)
   final String? text;
 
-  @HiveField(2)
+  @HiveField(NoteModelHiveIds.hiveFieldCreateDate)
   final DateTime? createDate;
+
+  @HiveField(NoteModelHiveIds.hiveFieldKey)
+  final String? key;
 }

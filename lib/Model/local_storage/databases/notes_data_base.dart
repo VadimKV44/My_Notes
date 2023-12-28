@@ -9,6 +9,7 @@ class NotesDataBase {
       Hive.registerAdapter(NoteModelAdapter());
     }
     notesBox = await Hive.openBox('notesBox');
+    // Hive.deleteBoxFromDisk('notesBox'); /// <- to clean the box when writing and reading errors occur
     return notesBox.isOpen;
   }
 
@@ -17,20 +18,12 @@ class NotesDataBase {
     return data;
   }
 
-  static void saveNewNote(NoteModel note) async {
-    await notesBox.add(note);
+  static void saveNote(String key, NoteModel note) async {
+    await notesBox.put(key, note);
   }
 
-  static void overwriteNote(int index, NoteModel note) async {
-    await notesBox.putAt(index, note);
-  }
-
-  static NoteModel? getOneNote(int index) {
-    NoteModel? data = notesBox.getAt(index);
-    return data;
-  }
-
-  static void deleteNote(int index) async {
-    await notesBox.deleteAt(index);
+  static void deleteNote(NoteModel note) async {
+    note.delete();
+    await notesBox.compact();
   }
 }

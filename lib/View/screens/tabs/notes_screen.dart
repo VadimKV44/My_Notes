@@ -64,7 +64,6 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
                               alignment: Alignment.topCenter,
                               child: AnimatedList(
                                 shrinkWrap: true,
-                                reverse: true,
                                 padding: const EdgeInsets.only(right: 24.0, left: 24.0, bottom: 80.0),
                                 key: _listNotesKey,
                                 initialItemCount: notesCubit.notes.length,
@@ -73,8 +72,7 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
                                     sizeFactor: animation,
                                     child: NotesItemWidget(
                                       note: notesCubit.notes[index],
-                                      noteIndex: index,
-                                      delete: () => _deleteNote(notesCubit, index),
+                                      delete: () => _deleteNote(notesCubit, index, notesCubit.notes[index].key!, notesCubit.notes[index]),
                                     ),
                                   );
                                 },
@@ -91,8 +89,7 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
                   controller: _animationController,
                   openBuilder: (context, action) {
                     return OneNoteScreen(
-                      noteIndex: notesCubit.notes.isEmpty ? notesCubit.notes.length : notesCubit.notes.length + 1,
-                      saveNote: (text, createDate, noteId) => _saveNote(notesCubit, text, createDate, noteId),
+                      saveNote: (text, createDate) => _saveNote(notesCubit, text, createDate),
                     );
                   },
                   closedBuilder: (context, action) {
@@ -110,15 +107,14 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
     );
   }
 
-  void _deleteNote(NotesCubit notesCubit, int index) {
-    NoteModel _deletedNote = notesCubit.getOneNote(index);
-    notesCubit.deleteNote(index);
+  void _deleteNote(NotesCubit notesCubit, int index, String key, NoteModel note) {
+    NoteModel _deletedNote = notesCubit.getOneNote(key);
+    notesCubit.deleteNote(note);
     AnimatedRemovedItemBuilder _builder = (context, animation) {
       return SizeTransition(
         sizeFactor: animation,
         child: NotesItemWidget(
           note: _deletedNote,
-          noteIndex: index,
           delete: () {},
         ),
       );
@@ -127,8 +123,8 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
     _listNotesKey.currentState?.removeItem(index, _builder);
   }
 
-  void _saveNote(NotesCubit notesCubit, String text, DateTime createDate, int noteId) {
+  void _saveNote(NotesCubit notesCubit, String text, DateTime createDate) {
     _listNotesKey.currentState?.insertItem(notesCubit.notes.isEmpty ? 0 : notesCubit.notes.length);
-    notesCubit.saveNewNote(noteId, text, createDate);
+    notesCubit.saveNote(text, createDate);
   }
 }

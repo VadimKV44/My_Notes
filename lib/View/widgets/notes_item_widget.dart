@@ -9,12 +9,10 @@ class NotesItemWidget extends StatefulWidget {
     Key? key,
     required this.delete,
     required this.note,
-    required this.noteIndex,
   }) : super(key: key);
 
   final Function() delete;
   final NoteModel note;
-  final int noteIndex;
 
   @override
   State<NotesItemWidget> createState() => _NotesItemWidgetState();
@@ -47,7 +45,6 @@ class _NotesItemWidgetState extends State<NotesItemWidget> with SingleTickerProv
         openBuilder: (context, action) {
           return OneNoteScreen(
             note: widget.note,
-            noteIndex: widget.noteIndex,
           );
         },
         closedBuilder: (context, action) {
