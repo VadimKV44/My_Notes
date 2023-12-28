@@ -10,13 +10,13 @@ class OneNoteScreen extends StatefulWidget {
   const OneNoteScreen({
     Key? key,
     this.note,
+    this.saveNote,
     required this.noteIndex,
-    required this.save,
   }) : super(key: key);
 
   final NoteModel? note;
   final int noteIndex;
-  final void Function(String text, DateTime createDate, int noteId) save;
+  final void Function(String text, DateTime createDate, int noteId)? saveNote;
 
   @override
   State<OneNoteScreen> createState() => _OneNoteScreenState();
@@ -30,9 +30,7 @@ class _OneNoteScreenState extends State<OneNoteScreen> {
   @override
   void initState() {
     super.initState();
-    autofocusTextField();
-    _controller.text = widget.note?.text ?? '';
-    date = widget.note?.createDate ?? DateTime.now();
+    initialization();
   }
 
   @override
@@ -112,14 +110,19 @@ class _OneNoteScreenState extends State<OneNoteScreen> {
       ),
     );
   }
+  void initialization() {
+    autofocusTextField();
+    _controller.text = widget.note?.text ?? '';
+    date = widget.note?.createDate ?? DateTime.now();
+  }
 
   void _save(BuildContext context, NotesCubit notesCubit) {
     if (_controller.text.isNotEmpty) {
       if (widget.note == null) {
-        widget.save(_controller.text, date!, widget.noteIndex);
+        widget.saveNote!(_controller.text, date!, widget.noteIndex);
       } else {
         if (widget.note?.text != _controller.text) {
-          notesCubit.overwriteNote(widget.noteIndex, widget.noteIndex, _controller.text, date!);
+          notesCubit.overwriteNote(widget.noteIndex, _controller.text, date!);
         }
       }
     }

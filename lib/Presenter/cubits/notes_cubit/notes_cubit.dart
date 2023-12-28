@@ -27,9 +27,9 @@ class NotesCubit extends Cubit<NotesState> {
     emit(NotesInitial());
   }
 
-  void overwriteNote(int index, int noteIndex, String text, DateTime createDate) {
+  void overwriteNote(int noteIndex, String text, DateTime createDate) {
     NoteModel note = NoteModel(id: noteIndex, text: text, createDate: createDate);
-    NotesDataBase.overwriteNote(index, note);
+    NotesDataBase.overwriteNote(noteIndex, note);
     notes.clear();
     getAllNotes();
     emit(NotesInitial());

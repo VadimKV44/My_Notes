@@ -48,7 +48,6 @@ class _NotesItemWidgetState extends State<NotesItemWidget> with SingleTickerProv
           return OneNoteScreen(
             note: widget.note,
             noteIndex: widget.noteIndex,
-            save: (text, createDate, noteId) {},
           );
         },
         closedBuilder: (context, action) {

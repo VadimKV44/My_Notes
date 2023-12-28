@@ -92,10 +92,7 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
                   openBuilder: (context, action) {
                     return OneNoteScreen(
                       noteIndex: notesCubit.notes.isEmpty ? notesCubit.notes.length : notesCubit.notes.length + 1,
-                      save: (text, createDate, noteId) {
-                        _listNotesKey.currentState?.insertItem(notesCubit.notes.isEmpty ? 0 : notesCubit.notes.length);
-                        notesCubit.saveNewNote(noteId, text, createDate);
-                      },
+                      saveNote: (text, createDate, noteId) => _saveNote(notesCubit, text, createDate, noteId),
                     );
                   },
                   closedBuilder: (context, action) {
@@ -128,5 +125,10 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
     };
 
     _listNotesKey.currentState?.removeItem(index, _builder);
+  }
+
+  void _saveNote(NotesCubit notesCubit, String text, DateTime createDate, int noteId) {
+    _listNotesKey.currentState?.insertItem(notesCubit.notes.isEmpty ? 0 : notesCubit.notes.length);
+    notesCubit.saveNewNote(noteId, text, createDate);
   }
 }
