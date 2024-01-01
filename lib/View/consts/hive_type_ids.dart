@@ -4,6 +4,7 @@ abstract class NoteModelHiveIds {
   static const int hiveFieldText = 1;
   static const int hiveFieldCreateDate = 2;
   static const int hiveFieldKey = 4;
+  static const int hiveFieldColor = 5;
   /// Deleted hiveFieldIds = [ 3, 0 ]
 }
 

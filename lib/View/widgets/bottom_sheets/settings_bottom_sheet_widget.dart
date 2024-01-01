@@ -66,9 +66,10 @@ class _SettingsBottomSheetWidgetState extends State<SettingsBottomSheetWidget> {
                         const Expanded(child: SizedBox()),
                         InkWell(
                           onTap: () {
-                            BlocProvider.of<ThemeCubit>(context).changedTheme(themeNumber: 1);
+                            BlocProvider.of<ThemeCubit>(context).changeTheme(theme: 1);
                           },
-                          child: Container(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
                             height: 30.0,
                             width: 30.0,
                             decoration: BoxDecoration(
@@ -81,9 +82,10 @@ class _SettingsBottomSheetWidgetState extends State<SettingsBottomSheetWidget> {
                         const SizedBox(width: 20.0),
                         InkWell(
                           onTap: () {
-                            BlocProvider.of<ThemeCubit>(context).changedTheme(themeNumber: 2);
+                            BlocProvider.of<ThemeCubit>(context).changeTheme(theme: 2);
                           },
-                          child: Container(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
                             height: 30.0,
                             width: 30.0,
                             decoration: BoxDecoration(

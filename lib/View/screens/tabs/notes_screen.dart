@@ -89,7 +89,7 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
                   controller: _animationController,
                   openBuilder: (context, action) {
                     return OneNoteScreen(
-                      saveNote: (text, createDate) => _saveNote(notesCubit, text, createDate),
+                      saveNote: (text, createDate, noteColor) => _saveNote(notesCubit, text, createDate, noteColor),
                     );
                   },
                   closedBuilder: (context, action) {
@@ -123,8 +123,8 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
     _listNotesKey.currentState?.removeItem(index, _builder);
   }
 
-  void _saveNote(NotesCubit notesCubit, String text, DateTime createDate) {
+  void _saveNote(NotesCubit notesCubit, String text, DateTime createDate, int noteColor) {
     _listNotesKey.currentState?.insertItem(notesCubit.notes.isEmpty ? 0 : notesCubit.notes.length);
-    notesCubit.saveNote(text, createDate);
+    notesCubit.saveNote(text, createDate, noteColor);
   }
 }

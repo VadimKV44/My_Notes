@@ -1,4 +1,3 @@
-
 import 'package:hive/hive.dart';
 import 'package:my_notes/View/consts/hive_type_ids.dart';
 
@@ -10,6 +9,7 @@ class NoteModel extends HiveObject {
     required this.text,
     required this.createDate,
     required this.key,
+    required this.color,
 });
 
   @HiveField(NoteModelHiveIds.hiveFieldText)
@@ -20,4 +20,7 @@ class NoteModel extends HiveObject {
 
   @HiveField(NoteModelHiveIds.hiveFieldKey)
   final String? key;
+
+  @HiveField(NoteModelHiveIds.hiveFieldColor)
+  final int? color;
 }

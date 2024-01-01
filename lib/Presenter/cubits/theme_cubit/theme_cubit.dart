@@ -8,22 +8,26 @@ part 'theme_state.dart';
 class ThemeCubit extends Cubit<ThemeState> {
   ThemeCubit() : super(ThemeInitial(selectedTheme: Themes.lightTheme()));
 
-  void changedTheme({int themeNumber = 1}) async {
+  int themeNumber = 1;
+
+  void changeTheme({int theme = 1}) async {
+    themeNumber = theme;
     ThemeData selectedTheme = Themes.lightTheme();
 
-    if (themeNumber == 1) {
-      await Settings.setTheme(themeNumber);
+    if (theme == 1) {
+      await Settings.setTheme(theme);
       selectedTheme = Themes.lightTheme();
       emit(ThemeInitial(selectedTheme: selectedTheme));
     } else {
-      await Settings.setTheme(themeNumber);
+      await Settings.setTheme(theme);
       selectedTheme = Themes.darkTheme();
       emit(ThemeInitial(selectedTheme: selectedTheme));
     }
   }
 
-  void gettingSavedTheme() async {
+  void getSavedTheme() async {
     await Settings.getTheme();
+    themeNumber = Settings.selectedTheme;
     if (Settings.selectedTheme == 1) {
       emit(ThemeInitial(selectedTheme: Themes.lightTheme()));
     } else {

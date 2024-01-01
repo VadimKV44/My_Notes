@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     initializeDateFormatting('ru');
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ThemeCubit>(create: (context) => ThemeCubit()..gettingSavedTheme()),
+        BlocProvider<ThemeCubit>(create: (context) => ThemeCubit()..getSavedTheme()),
         BlocProvider<NotesCubit>(create: (context) => NotesCubit()),
         BlocProvider<TaskCubit>(create: (context) => TaskCubit()),
       ],

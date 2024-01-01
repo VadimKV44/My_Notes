@@ -19,20 +19,22 @@ class NotesCubit extends Cubit<NotesState> {
     emit(NotesInitial());
   }
 
-  void saveNote(String text, DateTime createDate, [String? noteKey]) async {
+  void saveNote(String text, DateTime createDate, int color, [String? noteKey]) async {
     String key = noteKey == null ? uuid.v1() : noteKey;
-    NoteModel note = NoteModel(text: text, createDate: createDate, key: key);
+    NoteModel note = NoteModel(text: text, createDate: createDate, key: key, color: color);
     NotesDataBase.saveNote(key, note);
-    noteKey == null ? notes.insert(0, note) : notes[notes.indexWhere((item) => item.key == noteKey)] = note;
+    if (noteKey == null) {
+      notes.insert(0, note);
+    } else {
+      notes[notes.indexWhere((item) => item.key == noteKey)] = note;
+    }
     await checkForEmptinessNotes();
-    emit(NotesInitial());
   }
 
   void deleteNote(NoteModel note) async {
     NotesDataBase.deleteNote(note);
     notes.removeWhere((element) => element.key == note.key);
     await checkForEmptinessNotes();
-    emit(NotesInitial());
   }
 
   NoteModel getOneNote(String key) {
@@ -50,8 +52,10 @@ class NotesCubit extends Cubit<NotesState> {
   bool notesIsEmpty = false;
 
   Future<void> checkForEmptinessNotes() async {
+    sortNotesByCreationDate();
     await Future.delayed(const Duration(milliseconds: 500), () {
       notesIsEmpty = notes.isEmpty;
     });
+    emit(NotesInitial());
   }
 }
