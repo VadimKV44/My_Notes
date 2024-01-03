@@ -7,8 +7,8 @@ import 'package:my_notes/View/screens/one_note_screen.dart';
 import 'package:my_notes/View/widgets/item_animation_widget.dart';
 import 'package:my_notes/View/widgets/note_item_up_panel_widget.dart';
 
-class NotesItemWidget extends StatefulWidget {
-  const NotesItemWidget({
+class NoteItemWidget extends StatefulWidget {
+  const NoteItemWidget({
     Key? key,
     required this.delete,
     required this.note,
@@ -18,10 +18,10 @@ class NotesItemWidget extends StatefulWidget {
   final NoteModel note;
 
   @override
-  State<NotesItemWidget> createState() => _NotesItemWidgetState();
+  State<NoteItemWidget> createState() => _NoteItemWidgetState();
 }
 
-class _NotesItemWidgetState extends State<NotesItemWidget> with SingleTickerProviderStateMixin {
+class _NoteItemWidgetState extends State<NoteItemWidget> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override

@@ -25,18 +25,9 @@ class CustomTextFieldWidget extends StatelessWidget {
       enabled: true,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 2.0),
-          borderRadius: BorderRadius.circular(14.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 2.0),
-          borderRadius: BorderRadius.circular(14.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 2.0),
-          borderRadius: BorderRadius.circular(14.0),
-        ),
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
         hintText: hintText,
         helperStyle: LightThemeTextStyles.kColorGreyW800(16.0),
       ),

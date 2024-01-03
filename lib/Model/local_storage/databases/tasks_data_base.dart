@@ -9,6 +9,7 @@ class TasksDataBase {
       Hive.registerAdapter(TaskModelAdapter());
     }
     tasksBox = await Hive.openBox('tasksBox');
+    // Hive.deleteBoxFromDisk('tasksBox'); /// <- to clean the box when writing and reading errors occur
     return tasksBox.isOpen;
   }
 
@@ -17,20 +18,12 @@ class TasksDataBase {
     return data;
   }
 
-  static void saveNewTask(TaskModel task) async {
-    await tasksBox.add(task);
+  static void saveTask(String key, TaskModel task) async {
+    await tasksBox.put(key, task);
   }
 
-  static void overwriteTask(int index, TaskModel task) async {
-    await tasksBox.putAt(index, task);
-  }
-
-  static TaskModel? getOneTask(int index) {
-    TaskModel? data = tasksBox.getAt(index);
-    return data;
-  }
-
-  static void deleteNote(int index) async {
-    await tasksBox.deleteAt(index);
+  static void deleteTask(TaskModel task) async {
+    task.delete();
+    await tasksBox.compact();
   }
 }

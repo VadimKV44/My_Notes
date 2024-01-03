@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_notes/Model/models/note_model/note_model.dart';
 import 'package:my_notes/Presenter/cubits/notes_cubit/notes_cubit.dart';
+import 'package:my_notes/Presenter/functions/return_animated_removed_item_builder.dart';
 import 'package:my_notes/View/screens/one_note_screen.dart';
 import 'package:my_notes/View/widgets/custom_icon_button_widget.dart';
 import 'package:my_notes/View/widgets/item_animation_widget.dart';
-import 'package:my_notes/View/widgets/notes_item_widget.dart';
+import 'package:my_notes/View/widgets/note_item_widget.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({Key? key}) : super(key: key);
@@ -70,7 +71,7 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
                                 itemBuilder: (context, index, animation) {
                                   return SizeTransition(
                                     sizeFactor: animation,
-                                    child: NotesItemWidget(
+                                    child: NoteItemWidget(
                                       note: notesCubit.notes[index],
                                       delete: () => _deleteNote(notesCubit, index, notesCubit.notes[index].key!, notesCubit.notes[index]),
                                     ),
@@ -110,17 +111,7 @@ class _NotesScreenState extends State<NotesScreen> with AutomaticKeepAliveClient
   void _deleteNote(NotesCubit notesCubit, int index, String key, NoteModel note) {
     NoteModel _deletedNote = notesCubit.getOneNote(key);
     notesCubit.deleteNote(note);
-    AnimatedRemovedItemBuilder _builder = (context, animation) {
-      return SizeTransition(
-        sizeFactor: animation,
-        child: NotesItemWidget(
-          note: _deletedNote,
-          delete: () {},
-        ),
-      );
-    };
-
-    _listNotesKey.currentState?.removeItem(index, _builder);
+    _listNotesKey.currentState?.removeItem(index, returnAnimatedRemovedItemBuilder(note: _deletedNote));
   }
 
   void _saveNote(NotesCubit notesCubit, String text, DateTime createDate, int noteColor) {

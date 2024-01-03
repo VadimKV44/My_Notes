@@ -24,7 +24,6 @@ class NoteItemUpPanelWidget extends StatelessWidget {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            // color: Theme.of(context).colorScheme.secondary,
             color: changeItemColor(state, color),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20.0),

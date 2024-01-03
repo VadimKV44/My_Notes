@@ -73,10 +73,18 @@ class _OneNoteScreenState extends State<OneNoteScreen> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 14.0, right: 14.0, top: 14.0, bottom: 60.0),
-                              child: CustomTextFieldWidget(
-                                focusNode: focusNode,
-                                controller: _controller,
-                                hintText: Strings.textOfNote,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: changeItemColor(state, noteColor), width: 2.0),
+                                  borderRadius: BorderRadius.circular(14.0),
+                                ),
+                                child: CustomTextFieldWidget(
+                                  focusNode: focusNode,
+                                  controller: _controller,
+                                  hintText: Strings.textOfNote,
+                                ),
                               ),
                             ),
                           ],
@@ -97,7 +105,7 @@ class _OneNoteScreenState extends State<OneNoteScreen> {
                                   right: 5.0,
                                 ),
                                 child: ColorItemWidget(
-                                  onTap: () => selectColor(index),
+                                  onTap: () => _selectColor(index),
                                   color: changeItemColor(state, index),
                                   isSelected: noteColor == index,
                                 ),
@@ -118,13 +126,13 @@ class _OneNoteScreenState extends State<OneNoteScreen> {
   }
 
   void initialization() {
-    autofocusTextField();
+    _autofocusTextField();
     _controller.text = widget.note?.text ?? '';
     date = widget.note?.createDate ?? DateTime.now();
     noteColor = widget.note?.color ?? 0;
   }
 
-  void selectColor(int index) {
+  void _selectColor(int index) {
     setState(() {
       noteColor = index;
     });
@@ -143,7 +151,7 @@ class _OneNoteScreenState extends State<OneNoteScreen> {
     _back();
   }
 
-  void autofocusTextField() {
+  void _autofocusTextField() {
     Future.delayed(const Duration(milliseconds: 500), () {
       focusNode.requestFocus();
     });

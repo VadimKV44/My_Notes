@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_notes/Model/models/task_model/task_model.dart';
 import 'package:my_notes/Presenter/cubits/task_cubit/task_cubit.dart';
+import 'package:my_notes/Presenter/functions/return_animated_removed_item_builder.dart';
 import 'package:my_notes/View/consts/strings.dart';
 import 'package:my_notes/View/consts/styles.dart';
 import 'package:my_notes/View/screens/one_task_screen.dart';
@@ -22,7 +23,7 @@ class _TasksScreenState extends State<TasksScreen> with AutomaticKeepAliveClient
   bool get wantKeepAlive => true;
 
   late AnimationController _animationController;
-  final GlobalKey<AnimatedListState> _listTaskKey = GlobalKey<AnimatedListState>(debugLabel: '_taskScreen');
+  final GlobalKey<AnimatedListState> _listNotCompletedTaskKey = GlobalKey<AnimatedListState>(debugLabel: '_taskScreen');
   final GlobalKey<AnimatedListState> _listCompletedTaskKey = GlobalKey<AnimatedListState>(debugLabel: '_taskCompletedScreen');
 
   @override
@@ -46,7 +47,7 @@ class _TasksScreenState extends State<TasksScreen> with AutomaticKeepAliveClient
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: Stack(
             children: [
-              taskCubit.tasksIsEmpty
+              taskCubit.notCompletedTasksIsEmpty && taskCubit.completedTasksIsEmpty
                   ? FadeIn(
                       child: Center(
                         child: Icon(
@@ -57,44 +58,21 @@ class _TasksScreenState extends State<TasksScreen> with AutomaticKeepAliveClient
                       ),
                     )
                   : FadeInUp(
-                      child: Column(
+                      child: ListView(
                         children: [
                           AnimatedList(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            reverse: true,
                             padding: const EdgeInsets.only(right: 24.0, left: 24.0, bottom: 20.0),
-                            key: _listTaskKey,
-                            initialItemCount: taskCubit.tasks.length,
+                            key: _listNotCompletedTaskKey,
+                            initialItemCount: taskCubit.notCompletedTasks.length,
                             itemBuilder: (context, index, animation) {
                               return SizeTransition(
                                 sizeFactor: animation,
                                 child: TaskItemWidget(
-                                  task: taskCubit.tasks[index],
-                                  deleteTask: () => _deleteTask(taskCubit, index),
-                                  completeTask: () {
-                                    if (!taskCubit.tasks[index].isCompleted) {
-                                      TaskModel _deletedNote = taskCubit.getOneTask(index);
-                                      taskCubit.completeTask(taskCubit.tasks[index].text!, index);
-                                      AnimatedRemovedItemBuilder _builder = (context, animation) {
-                                        return SizeTransition(
-                                          sizeFactor: animation,
-                                          child: TaskItemWidget(
-                                            task: _deletedNote,
-                                            taskIndex: index,
-                                            deleteTask: () {},
-                                            completeTask: () {},
-                                          ),
-                                        );
-                                      };
-                                      _listTaskKey.currentState?.removeItem(index, _builder);
-                                    } else {
-                                      _listTaskKey.currentState?.insertItem(taskCubit.tasks.isEmpty ? 0 : taskCubit.tasks.length);
-                                      taskCubit.completeTask(taskCubit.tasks[index].text!, index);
-                                    }
-
-                                  },
-                                  taskIndex: index,
+                                  task: taskCubit.notCompletedTasks[index],
+                                  deleteTask: () => _deleteTask(taskCubit, index, taskCubit.notCompletedTasks[index]),
+                                  completeTask: () => _completeTask(taskCubit, taskCubit.notCompletedTasks[index], index),
                                 ),
                               );
                             },
@@ -112,7 +90,6 @@ class _TasksScreenState extends State<TasksScreen> with AutomaticKeepAliveClient
                                       AnimatedList(
                                         physics: const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
-                                        reverse: true,
                                         padding: const EdgeInsets.only(right: 24.0, left: 24.0, bottom: 80.0),
                                         key: _listCompletedTaskKey,
                                         initialItemCount: taskCubit.completedTasks.length,
@@ -121,30 +98,8 @@ class _TasksScreenState extends State<TasksScreen> with AutomaticKeepAliveClient
                                             sizeFactor: animation,
                                             child: TaskItemWidget(
                                               task: taskCubit.completedTasks[index],
-                                              deleteTask: () => _deleteTask(taskCubit, taskCubit.completedTasks[index].id!),//TODO index
-                                              completeTask: () {
-                                                if (taskCubit.completedTasks[index].isCompleted) {
-                                                  TaskModel _deletedNote = taskCubit.getOneTask(index);
-                                                  taskCubit.completeTask(taskCubit.completedTasks[index].text!, index);
-                                                  AnimatedRemovedItemBuilder _builder = (context, animation) {
-                                                    return SizeTransition(
-                                                      sizeFactor: animation,
-                                                      child: TaskItemWidget(
-                                                        task: _deletedNote,
-                                                        taskIndex: index,
-                                                        deleteTask: () {},
-                                                        completeTask: () {},
-                                                      ),
-                                                    );
-                                                  };
-                                                  _listTaskKey.currentState?.removeItem(index, _builder);
-                                                } else {
-                                                  _listTaskKey.currentState?.insertItem(taskCubit.completedTasks.isEmpty ? 0 : taskCubit.completedTasks.length);
-                                                  taskCubit.completeTask(taskCubit.completedTasks[index].text!, index);
-                                                }
-
-                                              },
-                                              taskIndex: index,
+                                              deleteTask: () => _deleteTask(taskCubit, index, taskCubit.completedTasks[index]),
+                                              completeTask: () => _completeTask(taskCubit, taskCubit.completedTasks[index], index),
                                             ),
                                           );
                                         },
@@ -162,11 +117,7 @@ class _TasksScreenState extends State<TasksScreen> with AutomaticKeepAliveClient
                   controller: _animationController,
                   openBuilder: (context, action) {
                     return OneTaskScreen(
-                      save: (String text, DateTime createDate, int taskId) {
-                        _listTaskKey.currentState?.insertItem(taskCubit.tasksData.isEmpty ? 0 : taskCubit.tasksData.length);
-                        taskCubit.saveNewTask(taskId, text, createDate);
-                      },
-                      taskIndex: taskCubit.tasksData.isEmpty ? taskCubit.tasksData.length : taskCubit.tasksData.length + 1,
+                      saveTask: (String text, DateTime createDate, int taskColor) => _saveTask(taskCubit, text, createDate, taskColor),
                     );
                   },
                   closedBuilder: (context, action) {
@@ -191,21 +142,33 @@ class _TasksScreenState extends State<TasksScreen> with AutomaticKeepAliveClient
     );
   }
 
-  void _deleteTask(TaskCubit taskCubit, int index) {
-    TaskModel _deletedNote = taskCubit.getOneTask(index);
-    taskCubit.deleteTask(index);
-    AnimatedRemovedItemBuilder _builder = (context, animation) {
-      return SizeTransition(
-        sizeFactor: animation,
-        child: TaskItemWidget(
-          task: _deletedNote,
-          taskIndex: index,
-          deleteTask: () {},
-          completeTask: () {},
-        ),
-      );
-    };
+  void _deleteTask(TaskCubit taskCubit, int index, TaskModel task) {
+    TaskModel _deletedTask = taskCubit.getOneTask(task.key!, task.isCompleted);
+    taskCubit.deleteTask(task);
+    if (task.isCompleted) {
+      _listCompletedTaskKey.currentState?.removeItem(index, returnAnimatedRemovedItemBuilder(task: _deletedTask));
+    } else {
+      _listNotCompletedTaskKey.currentState?.removeItem(index, returnAnimatedRemovedItemBuilder(task: _deletedTask));
+    }
+  }
 
-    _listTaskKey.currentState?.removeItem(index, _builder);
+  void _saveTask(TaskCubit taskCubit, String text, DateTime createDate, int taskColor) {
+    _listNotCompletedTaskKey.currentState?.insertItem(taskCubit.notCompletedTasks.isEmpty ? 0 : taskCubit.notCompletedTasks.length);
+    taskCubit.saveTask(text, createDate, taskColor, false);
+  }
+
+  void _completeTask(TaskCubit taskCubit, TaskModel task, int index) {
+    TaskModel _deletedTask = taskCubit.getOneTask(task.key!, task.isCompleted);
+    if (task.isCompleted) {
+      taskCubit.removeTaskInList(task);
+      _listCompletedTaskKey.currentState?.removeItem(index, returnAnimatedRemovedItemBuilder(task: _deletedTask));
+      _listNotCompletedTaskKey.currentState?.insertItem(taskCubit.notCompletedTasks.isEmpty ? 0 : taskCubit.notCompletedTasks.length );
+      taskCubit.overwritingTask(task.text!, task.createDate!, task.color!, false, task.key!);
+    } else {
+      taskCubit.removeTaskInList(task);
+      _listNotCompletedTaskKey.currentState?.removeItem(index, returnAnimatedRemovedItemBuilder(task: _deletedTask));
+      _listCompletedTaskKey.currentState?.insertItem(taskCubit.completedTasks.isEmpty ? 0 : taskCubit.completedTasks.length );
+      taskCubit.overwritingTask(task.text!, task.createDate!, task.color!, true, task.key!);
+    }
   }
 }

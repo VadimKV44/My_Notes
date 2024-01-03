@@ -34,70 +34,76 @@ class _SettingsBottomSheetWidgetState extends State<SettingsBottomSheetWidget> {
                 borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0), topLeft: Radius.circular(20.0)),
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    height: 40.0,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
-                    ),
-                    child: Center(
-                      child: Container(
-                        height: 6.0,
-                        width: 60.0,
+                  Column(
+                    children: [
+                      Container(
+                        height: 40.0,
+                        width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.circular(20.0),
+                          color: Theme.of(context).colorScheme.secondary,
+                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                        ),
+                        child: Center(
+                          child: Container(
+                            height: 6.0,
+                            width: 60.0,
+                            decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          Strings.decoration,
-                          style: Theme.of(context).textTheme.labelSmall,
-                        ),
-                        const Expanded(child: SizedBox()),
-                        InkWell(
-                          onTap: () {
-                            BlocProvider.of<ThemeCubit>(context).changeTheme(theme: 1);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            height: 30.0,
-                            width: 30.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              border: Border.all(width: 4, color: Settings.selectedTheme == 1 ? Colors.blueAccent : Colors.grey[400]!),
+                      const SizedBox(height: 12.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              Strings.decoration,
+                              style: Theme.of(context).textTheme.labelSmall,
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 20.0),
-                        InkWell(
-                          onTap: () {
-                            BlocProvider.of<ThemeCubit>(context).changeTheme(theme: 2);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            height: 30.0,
-                            width: 30.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: DarkThemeColors.kPurple,
-                              border: Border.all(width: 4, color: Settings.selectedTheme == 2 ? Colors.blueAccent : Colors.grey[400]!),
+                            const Expanded(child: SizedBox()),
+                            InkWell(
+                              onTap: () {
+                                BlocProvider.of<ThemeCubit>(context).changeTheme(theme: 1);
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                height: 30.0,
+                                width: 30.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  border: Border.all(width: 4, color: Settings.selectedTheme == 1 ? Colors.blueAccent : Colors.grey[400]!),
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 20.0),
+                            InkWell(
+                              onTap: () {
+                                BlocProvider.of<ThemeCubit>(context).changeTheme(theme: 2);
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                height: 30.0,
+                                width: 30.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: DarkThemeColors.kPurple,
+                                  border: Border.all(width: 4, color: Settings.selectedTheme == 2 ? Colors.blueAccent : Colors.grey[400]!),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  SafeArea(child: Text('Version: 1.0.0', style: Theme.of(context).textTheme.headlineSmall,)),
                 ],
               ),
             ),
