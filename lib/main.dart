@@ -18,8 +18,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-//TODO записать в README то что я изучал и делал в этом приложении
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
